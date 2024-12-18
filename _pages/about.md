@@ -33,3 +33,7 @@ My work and research interests cover meeting and entertainment scenarios, and ma
 I am skilled at using techniques based on traditional signal processing and deep neural networks to address these audio problems.
 
 In my spare time, I enjoy traveling, drawing anime characters and going on hikes.
+
+<div style="text-align: center; font-size: 24px; font-weight: bold;">
+  **enjoy the life and passion!**
+</div>
