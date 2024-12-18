@@ -35,5 +35,5 @@ I am skilled at using techniques based on traditional signal processing and deep
 In my spare time, I enjoy traveling, drawing anime characters and going on hikes.
 
 <div style="text-align: center; font-size: 24px; font-weight: bold;">
-  **enjoy the life and passion!**
+  work hard, enjoy life and passion!
 </div>
