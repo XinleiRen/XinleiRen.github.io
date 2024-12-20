@@ -63,9 +63,7 @@ Encoder 架构主要由卷积网络构成， 该节先从最简单的一层卷�
 一个自然而然的想法就是：从 label 信号中选取 3 帧信号，保证 label 信号和输出信号的时长一样不就得了？没错，确实是这样做，而且正是该选取过程决定了卷积网络的因果性。
 
 以目前所讨论的这个网络来说，有 3 种选取方案，如图 1 所示。
-
-{% include figure.liquid path="/assets/img/causal_cnn/图1.jpg" class="img-fluid rounded" caption="图 1. 一层卷积网络因果性示例" %}<br>
-
+{% include figure.liquid path="/assets/img/causal_cnn/图1.jpg" class="img-fluid rounded" caption="图 1. 一层卷积网络因果性示例" %}
 * 图 1(a) 选取 label 信号中的最后 3 帧，这种选取方式确定了该网络是因果的。因为从图中可以看出当前时刻的输出帧只利用了当前时刻的输入帧以及历史的两帧信息；
 * 图 1(b) 选取 label 信号中最中间的 3 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧以及历史的 1 帧信息外，还使用了未来的 1 帧信息；
 * 图 1(c) 选取 label 信号中最前面的 3 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧外，还使用了未来的 2 帧信息；
@@ -94,7 +92,7 @@ Encoder 架构主要由卷积网络构成， 该节先从最简单的一层卷�
 ## 3.2. 多层卷积网络
 本节考虑包含了两层二维卷积的网络，且每层二维卷积在时间维度上的参数均为：kernel = 3，stride = 1。类似于图 1，现给出相应的两层 CNN 网络的因果性示例图，如图 2 所示。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图2.jpg" class="img-fluid rounded" caption="图 2. 二层卷积网络因果性示例" %}<br>
+{% include figure.liquid path="/assets/img/causal_cnn/图2.jpg" class="img-fluid rounded" caption="图 2. 二层卷积网络因果性示例" %}
 
 需要注意的是，图 2 只给出了其中的三种输出结果，还有其余两种输出结果读者可自行分析。通过图 2 可以看出：
 * 图 2(a) 表示的是非因果网络，因为输出帧除了利用当前时刻的输入帧外，还使用了未来的 4 帧信息；
@@ -154,7 +152,7 @@ Encoder-Decoder 是一种对称的网络结构。其中，Encoder 包含的是�
 
 当给同等参数配置下的一层卷积网络输入 5 帧的音频信号时，它会输出 3 帧的音频信号。而如果将这 3 帧音频信号输入给一层转置卷积网络，那么将会输出 5 帧音频信号。图 3 展示了该转置卷积网络的计算过程。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图3.jpg" class="img-fluid rounded" caption="图 3. 转置卷积网络计算过程示例" %}<br>
+{% include figure.liquid path="/assets/img/causal_cnn/图3.jpg" class="img-fluid rounded" caption="图 3. 转置卷积网络计算过程示例" %}
 
 由于 kernel = 3，所以转置卷积网络每一帧输入所对应的输出都是 3 帧，将对应位置上的所有帧的输出相加得到转置卷积网络的最终输出。比如输出中的第二帧等于第一帧输出的第二个元素与第二帧输出的第一个元素之和，如图 3 中红圈所示。
 
@@ -166,7 +164,7 @@ Encoder-Decoder 是一种对称的网络结构。其中，Encoder 包含的是�
 ### 4.2.1. 控制网络的因果性和感受野
 那么，在具体 coding 过程中，该怎么做才能得到一个因果网络，并且使得该网络输出的有效时长还是 5 帧那？答案是输入数据补零，输出数据丢帧。图 5 展示了该计算过程。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图5.jpg" class="img-fluid rounded" caption="图 5. 因果网络计算过程示例" %}<br>
+{% include figure.liquid path="/assets/img/causal_cnn/图5.jpg" class="img-fluid rounded" caption="图 5. 因果网络计算过程示例" %}
 
 在输入数据的最前面补两帧零之后，网络的总体输入变为了 7 帧，经过卷积和转置卷积之后，网络的输出依然是 7 帧。但是 label 数据时长和补零前的输入数据时长一样，都是 5 帧。此时，为了计算 loss 函数，需要从输出的 7 帧数据中丢弃 2 帧数据。该丢弃过程在决定网络的因果性和感受野方面也起到了重要作用。
 
