@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<!-- saved from url=(0105)file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+      <title>谈谈音频信号处理中 CNN 的因果性</title>
+      
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      
+      <link rel="stylesheet" href="./causal-cnn_files/katex.min.css">
+      
+      
+      
+      
+      
+      <style>
+      code[class*=language-],pre[class*=language-]{color:#333;background:0 0;font-family:Consolas,"Liberation Mono",Menlo,Courier,monospace;text-align:left;white-space:pre;word-spacing:normal;word-break:normal;word-wrap:normal;line-height:1.4;-moz-tab-size:8;-o-tab-size:8;tab-size:8;-webkit-hyphens:none;-moz-hyphens:none;-ms-hyphens:none;hyphens:none}pre[class*=language-]{padding:.8em;overflow:auto;border-radius:3px;background:#f5f5f5}:not(pre)>code[class*=language-]{padding:.1em;border-radius:.3em;white-space:normal;background:#f5f5f5}.token.blockquote,.token.comment{color:#969896}.token.cdata{color:#183691}.token.doctype,.token.macro.property,.token.punctuation,.token.variable{color:#333}.token.builtin,.token.important,.token.keyword,.token.operator,.token.rule{color:#a71d5d}.token.attr-value,.token.regex,.token.string,.token.url{color:#183691}.token.atrule,.token.boolean,.token.code,.token.command,.token.constant,.token.entity,.token.number,.token.property,.token.symbol{color:#0086b3}.token.prolog,.token.selector,.token.tag{color:#63a35c}.token.attr-name,.token.class,.token.class-name,.token.function,.token.id,.token.namespace,.token.pseudo-class,.token.pseudo-element,.token.url-reference .token.variable{color:#795da3}.token.entity{cursor:help}.token.title,.token.title .token.punctuation{font-weight:700;color:#1d3e81}.token.list{color:#ed6a43}.token.inserted{background-color:#eaffea;color:#55a532}.token.deleted{background-color:#ffecec;color:#bd2c00}.token.bold{font-weight:700}.token.italic{font-style:italic}.language-json .token.property{color:#183691}.language-markup .token.tag .token.punctuation{color:#333}.language-css .token.function,code.language-css{color:#0086b3}.language-yaml .token.atrule{color:#63a35c}code.language-yaml{color:#183691}.language-ruby .token.function{color:#333}.language-markdown .token.url{color:#795da3}.language-makefile .token.symbol{color:#795da3}.language-makefile .token.variable{color:#183691}.language-makefile .token.builtin{color:#0086b3}.language-bash .token.keyword{color:#0086b3}pre[data-line]{position:relative;padding:1em 0 1em 3em}pre[data-line] .line-highlight-wrapper{position:absolute;top:0;left:0;background-color:transparent;display:block;width:100%}pre[data-line] .line-highlight{position:absolute;left:0;right:0;padding:inherit 0;margin-top:1em;background:hsla(24,20%,50%,.08);background:linear-gradient(to right,hsla(24,20%,50%,.1) 70%,hsla(24,20%,50%,0));pointer-events:none;line-height:inherit;white-space:pre}pre[data-line] .line-highlight:before,pre[data-line] .line-highlight[data-end]:after{content:attr(data-start);position:absolute;top:.4em;left:.6em;min-width:1em;padding:0 .5em;background-color:hsla(24,20%,50%,.4);color:#f4f1ef;font:bold 65%/1.5 sans-serif;text-align:center;vertical-align:.3em;border-radius:999px;text-shadow:none;box-shadow:0 1px #fff}pre[data-line] .line-highlight[data-end]:after{content:attr(data-end);top:auto;bottom:.4em}html body{font-family:'Helvetica Neue',Helvetica,'Segoe UI',Arial,freesans,sans-serif;font-size:16px;line-height:1.6;color:#333;background-color:#fff;overflow:initial;box-sizing:border-box;word-wrap:break-word}html body>:first-child{margin-top:0}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{line-height:1.2;margin-top:1em;margin-bottom:16px;color:#000}html body h1{font-size:2.25em;font-weight:300;padding-bottom:.3em}html body h2{font-size:1.75em;font-weight:400;padding-bottom:.3em}html body h3{font-size:1.5em;font-weight:500}html body h4{font-size:1.25em;font-weight:600}html body h5{font-size:1.1em;font-weight:600}html body h6{font-size:1em;font-weight:600}html body h1,html body h2,html body h3,html body h4,html body h5{font-weight:600}html body h5{font-size:1em}html body h6{color:#5c5c5c}html body strong{color:#000}html body del{color:#5c5c5c}html body a:not([href]){color:inherit;text-decoration:none}html body a{color:#08c;text-decoration:none}html body a:hover{color:#00a3f5;text-decoration:none}html body img{max-width:100%}html body>p{margin-top:0;margin-bottom:16px;word-wrap:break-word}html body>ol,html body>ul{margin-bottom:16px}html body ol,html body ul{padding-left:2em}html body ol.no-list,html body ul.no-list{padding:0;list-style-type:none}html body ol ol,html body ol ul,html body ul ol,html body ul ul{margin-top:0;margin-bottom:0}html body li{margin-bottom:0}html body li.task-list-item{list-style:none}html body li>p{margin-top:0;margin-bottom:0}html body .task-list-item-checkbox{margin:0 .2em .25em -1.8em;vertical-align:middle}html body .task-list-item-checkbox:hover{cursor:pointer}html body blockquote{margin:16px 0;font-size:inherit;padding:0 15px;color:#5c5c5c;background-color:#f0f0f0;border-left:4px solid #d6d6d6}html body blockquote>:first-child{margin-top:0}html body blockquote>:last-child{margin-bottom:0}html body hr{height:4px;margin:32px 0;background-color:#d6d6d6;border:0 none}html body table{margin:10px 0 15px 0;border-collapse:collapse;border-spacing:0;display:block;width:100%;overflow:auto;word-break:normal;word-break:keep-all}html body table th{font-weight:700;color:#000}html body table td,html body table th{border:1px solid #d6d6d6;padding:6px 13px}html body dl{padding:0}html body dl dt{padding:0;margin-top:16px;font-size:1em;font-style:italic;font-weight:700}html body dl dd{padding:0 16px;margin-bottom:16px}html body code{font-family:Menlo,Monaco,Consolas,'Courier New',monospace;font-size:.85em;color:#000;background-color:#f0f0f0;border-radius:3px;padding:.2em 0}html body code::after,html body code::before{letter-spacing:-.2em;content:'\00a0'}html body pre>code{padding:0;margin:0;word-break:normal;white-space:pre;background:0 0;border:0}html body .highlight{margin-bottom:16px}html body .highlight pre,html body pre{padding:1em;overflow:auto;line-height:1.45;border:#d6d6d6;border-radius:3px}html body .highlight pre{margin-bottom:0;word-break:normal}html body pre code,html body pre tt{display:inline;max-width:initial;padding:0;margin:0;overflow:initial;line-height:inherit;word-wrap:normal;background-color:transparent;border:0}html body pre code:after,html body pre code:before,html body pre tt:after,html body pre tt:before{content:normal}html body blockquote,html body dl,html body ol,html body p,html body pre,html body ul{margin-top:0;margin-bottom:16px}html body kbd{color:#000;border:1px solid #d6d6d6;border-bottom:2px solid #c7c7c7;padding:2px 4px;background-color:#f0f0f0;border-radius:3px}@media print{html body{background-color:#fff}html body h1,html body h2,html body h3,html body h4,html body h5,html body h6{color:#000;page-break-after:avoid}html body blockquote{color:#5c5c5c}html body pre{page-break-inside:avoid}html body table{display:table}html body img{display:block;max-width:100%;max-height:100%}html body code,html body pre{word-wrap:break-word;white-space:pre}}.markdown-preview{width:100%;height:100%;box-sizing:border-box}.markdown-preview ul{list-style:disc}.markdown-preview ul ul{list-style:circle}.markdown-preview ul ul ul{list-style:square}.markdown-preview ol{list-style:decimal}.markdown-preview ol ol,.markdown-preview ul ol{list-style-type:lower-roman}.markdown-preview ol ol ol,.markdown-preview ol ul ol,.markdown-preview ul ol ol,.markdown-preview ul ul ol{list-style-type:lower-alpha}.markdown-preview .newpage,.markdown-preview .pagebreak{page-break-before:always}.markdown-preview pre.line-numbers{position:relative;padding-left:3.8em;counter-reset:linenumber}.markdown-preview pre.line-numbers>code{position:relative}.markdown-preview pre.line-numbers .line-numbers-rows{position:absolute;pointer-events:none;top:1em;font-size:100%;left:0;width:3em;letter-spacing:-1px;border-right:1px solid #999;-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}.markdown-preview pre.line-numbers .line-numbers-rows>span{pointer-events:none;display:block;counter-increment:linenumber}.markdown-preview pre.line-numbers .line-numbers-rows>span:before{content:counter(linenumber);color:#999;display:block;padding-right:.8em;text-align:right}.markdown-preview .mathjax-exps .MathJax_Display{text-align:center!important}.markdown-preview:not([data-for=preview]) .code-chunk .code-chunk-btn-group{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .status{display:none}.markdown-preview:not([data-for=preview]) .code-chunk .output-div{margin-bottom:16px}.markdown-preview .md-toc{padding:0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link div,.markdown-preview .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}.markdown-preview .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}.scrollbar-style::-webkit-scrollbar{width:8px}.scrollbar-style::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}.scrollbar-style::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode]){position:relative;width:100%;height:100%;top:0;left:0;margin:0;padding:0;overflow:auto}html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{position:relative;top:0;min-height:100vh}@media screen and (min-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em calc(50% - 457px + 2em)}}@media screen and (max-width:914px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode]) .markdown-preview{font-size:14px!important;padding:1em}}@media print{html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{display:none}}html body[for=html-export]:not([data-presentation-mode]) #sidebar-toc-btn{position:fixed;bottom:8px;left:8px;font-size:28px;cursor:pointer;color:inherit;z-index:99;width:32px;text-align:center;opacity:.4}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] #sidebar-toc-btn{opacity:1}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc{position:fixed;top:0;left:0;width:300px;height:100%;padding:32px 0 48px 0;font-size:14px;box-shadow:0 0 4px rgba(150,150,150,.33);box-sizing:border-box;overflow:auto;background-color:inherit}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar{width:8px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-track{border-radius:10px;background-color:transparent}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc::-webkit-scrollbar-thumb{border-radius:5px;background-color:rgba(150,150,150,.66);border:4px solid rgba(150,150,150,.66);background-clip:content-box}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc a{text-decoration:none}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc{padding:0 16px}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link{display:inline;padding:.25rem 0}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link div,html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper .md-toc-link p{display:inline}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .md-sidebar-toc .md-toc .md-toc-link-wrapper.highlighted .md-toc-link{font-weight:800}html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{left:300px;width:calc(100% - 300px);padding:2em calc(50% - 457px - 300px / 2);margin:0;box-sizing:border-box}@media screen and (max-width:1274px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{padding:2em}}@media screen and (max-width:450px){html body[for=html-export]:not([data-presentation-mode])[html-show-sidebar-toc] .markdown-preview{width:100%}}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .markdown-preview{left:50%;transform:translateX(-50%)}html body[for=html-export]:not([data-presentation-mode]):not([html-show-sidebar-toc]) .md-sidebar-toc{display:none}
+/* Please visit the URL below for more information: */
+/*   https://shd101wyy.github.io/markdown-preview-enhanced/#/customize-css */
+
+      </style>
+      <!-- The content below will be included at the end of the <head> element. --><script type="text/javascript">
+  document.addEventListener("DOMContentLoaded", function () {
+    // your code here
+  });
+</script></head><body for="html-export">
+    
+    
+      <div class="crossnote markdown-preview  ">
+      
+<p><font color="red">本文对笔者关于 <font face="Times New Roman">CNN</font> 因果性的理解作以记录。如有表述不当之处欢迎批评指正。欢迎任何形式的转载，但请务必注明出处。</font></p>
+
+<div class="md-toc">
+<div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:18px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman1font-%E5%BC%95%E8%A8%80" class="md-toc-link">
+            <p><font face="Times New Roman">1.</font> 引言</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:18px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman2font-%E5%9B%A0%E6%9E%9C%E6%80%A7" class="md-toc-link">
+            <p><font face="Times New Roman">2.</font> 因果性</p>
+
+          </a></div><details style="padding:0;;padding-left:0px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman3-encoderfont-%E6%9E%B6%E6%9E%84" class="md-toc-link"><p><font face="Times New Roman">3. Encoder</font> 架构</p>
+</a>
+          </summary>
+        <div>
+          <details style="padding:0;;padding-left:24px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman31font-%E4%B8%80%E5%B1%82%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C" class="md-toc-link"><p><font face="Times New Roman">3.1.</font> 一层卷积网络</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman311font-%E7%BD%91%E7%BB%9C%E7%9A%84%E8%BE%93%E5%85%A5%E8%BE%93%E5%87%BA%E4%BB%A5%E5%8F%8A-font-facetimes-new-romanlabelfont" class="md-toc-link">
+            <p><font face="Times New Roman">3.1.1.</font> 网络的输入，输出以及 <font face="Times New Roman">label</font></p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman312font-%E5%86%B3%E5%AE%9A%E7%BD%91%E7%BB%9C%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%80%A7" class="md-toc-link">
+            <p><font face="Times New Roman">3.1.2.</font> 决定网络的因果性</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman313font-%E8%A1%A5%E9%9B%B6%E6%93%8D%E4%BD%9C" class="md-toc-link">
+            <p><font face="Times New Roman">3.1.3.</font> 补零操作</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman314font-%E6%80%BB%E7%BB%93" class="md-toc-link">
+            <p><font face="Times New Roman">3.1.4.</font> 总结</p>
+
+          </a></div>
+        </div>
+      </details>
+    <details style="padding:0;;padding-left:24px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman32font-%E5%A4%9A%E5%B1%82%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C" class="md-toc-link"><p><font face="Times New Roman">3.2.</font> 多层卷积网络</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman321font-%E8%BE%93%E5%85%A5%E5%B1%82%E8%A1%A5%E9%9B%B6" class="md-toc-link">
+            <p><font face="Times New Roman">3.2.1.</font> 输入层补零</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman322font-%E9%80%90%E5%B1%82%E8%A1%A5%E9%9B%B6" class="md-toc-link">
+            <p><font face="Times New Roman">3.2.2.</font> 逐层补零</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman323font-%E4%B8%A4%E7%A7%8D%E8%A1%A5%E9%9B%B6%E6%96%B9%E5%BC%8F%E5%AF%B9%E6%AF%94" class="md-toc-link">
+            <p><font face="Times New Roman">3.2.3.</font> 两种补零方式对比</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman324font-%E9%80%90%E5%B1%82%E8%A1%A5%E9%9B%B6%E9%9C%80%E8%A6%81%E6%B3%A8%E6%84%8F%E7%9A%84%E5%9C%B0%E6%96%B9" class="md-toc-link">
+            <p><font face="Times New Roman">3.2.4.</font> 逐层补零需要注意的地方</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman325font-%E6%80%BB%E7%BB%93" class="md-toc-link">
+            <p><font face="Times New Roman">3.2.5.</font> 总结</p>
+
+          </a></div>
+        </div>
+      </details>
+    <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman33font-%E6%80%BB%E7%BB%93" class="md-toc-link">
+            <p><font face="Times New Roman">3.3.</font> 总结</p>
+
+          </a></div>
+        </div>
+      </details>
+    <details style="padding:0;;padding-left:0px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman4-encoder-decoderfont-%E6%9E%B6%E6%9E%84" class="md-toc-link"><p><font face="Times New Roman">4. Encoder-Decoder</font> 架构</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman41font-%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF" class="md-toc-link">
+            <p><font face="Times New Roman">4.1.</font> 转置卷积</p>
+
+          </a></div><details style="padding:0;;padding-left:24px;" open="">
+        <summary class="md-toc-link-wrapper">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman42font-%E4%B8%80%E5%B1%82%E5%8D%B7%E7%A7%AF%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C" class="md-toc-link"><p><font face="Times New Roman">4.2.</font> 一层卷积（转置卷积）网络</p>
+</a>
+          </summary>
+        <div>
+          <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman421font--%E6%8E%A7%E5%88%B6%E7%BD%91%E7%BB%9C%E7%9A%84%E5%9B%A0%E6%9E%9C%E6%80%A7%E5%92%8C%E6%84%9F%E5%8F%97%E9%87%8E" class="md-toc-link">
+            <p><font face="Times New Roman">4.2.1.</font>  控制网络的因果性和感受野</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman422font-%E6%80%BB%E7%BB%93" class="md-toc-link">
+            <p><font face="Times New Roman">4.2.2.</font> 总结</p>
+
+          </a></div>
+        </div>
+      </details>
+    <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman43font-%E5%A4%9A%E5%B1%82%E5%8D%B7%E7%A7%AF%E8%BD%AC%E7%BD%AE%E5%8D%B7%E7%A7%AF%E7%BD%91%E7%BB%9C" class="md-toc-link">
+            <p><font face="Times New Roman">4.3.</font> 多层卷积（转置卷积）网络</p>
+
+          </a></div><div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:42px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman44font-%E6%80%BB%E7%BB%93" class="md-toc-link">
+            <p><font face="Times New Roman">4.4.</font> 总结</p>
+
+          </a></div>
+        </div>
+      </details>
+    <div class="md-toc-link-wrapper" style="padding:0;;display:list-item;list-style:square;margin-left:18px">
+          <a href="file:///private/var/folders/42/mm1yllwx63gg5tszt3k9x4ww0000gp/T/crossnote20241120-91289-4yu9uz.mwnft.html#font-facetimes-new-roman5font-%E5%90%8E%E8%AE%B0" class="md-toc-link">
+            <p><font face="Times New Roman">5.</font> 后记</p>
+
+          </a></div>
+</div>
+<h1 id="font-facetimes-new-roman1font-引言"><font face="Times New Roman">1.</font> 引言 </h1>
+<p>音频信号处理已经进入了神经网络时代，而 <font face="Times New Roman">CNN</font> 由于其强大的建模能力，已被广泛地应用在了各种音频信号处理网络中，像最近几届 <font face="Times New Roman">DNS Challenge</font> 的冠军所提出的网络均大量使用了 <font face="Times New Roman">CNN</font>。与图像处理不同，音频信号处理在大多数应用场景下都需要满足实时性要求，比如在线会议场景，直播场景等。满足实时性一般需要满足以下两个条件：<font color="red">算法是因果的</font>且<font color="red">计算复杂度要低</font>。本文主要讨论如何控制 <font face="Times New Roman">CNN</font> 网络的因果性，并不对其计算复杂度做过多讨论。</p>
+<p>从网络架构来说，以 <font face="Times New Roman">CNN</font> 为主的音频信号处理网络可以分为以下两大类：</p>
+<ul>
+<li>只包含卷积的 <font color="red"><font face="Times New Roman">Encoder</font> 架构</font></li>
+<li>即包含卷积又包含转置卷积的 <font color="red"><font face="Times New Roman">Encoder-Decoder</font> 架构</font></li>
+</ul>
+<p>本文对上述两种网络架构均进行了讨论，并进一步讨论了在实际 <font face="Times New Roman">coding</font> 过程中应该怎么做以及可能遇到的一些问题。</p>
+<h1 id="font-facetimes-new-roman2font-因果性"><font face="Times New Roman">2.</font> 因果性 </h1>
+<p>在讨论之前，先简单介绍下系统的因果性。因果性是指：<font color="red">当一个系统当前时刻的输出只依赖于当前时刻的输入以及（或）过去时刻的输入时，该系统就是因果的。</font>与之相对应的，<font color="red">当一个系统当前时刻的输出会依赖未来时刻的输入时，该系统就是非因果的。</font></p>
+<p>可见，在实时应用中，音频信号处理算法往往需要是因果的，以对当前时刻的输入信号作出及时的响应。</p>
+<h1 id="font-facetimes-new-roman3-encoderfont-架构"><font face="Times New Roman">3. Encoder</font> 架构 </h1>
+<p><font face="Times New Roman">Encoder</font> 架构主要由卷积网络构成， 该节先从最简单的一层卷积网络开始讨论，接着拓展到多层卷积网络的情况。</p>
+<h2 id="font-facetimes-new-roman31font-一层卷积网络"><font face="Times New Roman">3.1.</font> 一层卷积网络 </h2>
+<p>考虑一个只包含了一层二维卷积的网络，该二维卷积在时间维度上的参数为：<font face="Times New Roman">kernel = 3，stride = 1</font>。</p>
+<h3 id="font-facetimes-new-roman311font-网络的输入输出以及-font-facetimes-new-romanlabelfont"><font face="Times New Roman">3.1.1.</font> 网络的输入，输出以及 <font face="Times New Roman">label</font> </h3>
+<p>假设此时输入给网络一个时长为 <font face="Times New Roman">5</font> 帧的音频信号，那么输出信号的时长应该为 <font face="Times New Roman">5 - kernel + 1 = 5 - 3 + 1 = 3</font> 帧，网络的输出比输入少了 <font face="Times New Roman">2</font> 帧（这 <font face="Times New Roman">2</font> 帧作为音频信号的上下文信息被网络消耗掉了）。那么问题来了：输出信号只有 <font face="Times New Roman">3</font> 帧，但 <font face="Times New Roman">label</font> 信号和输入信号一样都是 <font face="Times New Roman">5</font> 帧，输出信号的时长不等于 <font face="Times New Roman">label</font> 信号的时长，该怎么计算 <font face="Times New Roman">loss</font> 函数那？</p>
+<h3 id="font-facetimes-new-roman312font-决定网络的因果性"><font face="Times New Roman">3.1.2.</font> 决定网络的因果性 </h3>
+<p>一个自然而然的想法就是：<font color="red">从 <font face="Times New Roman">label</font> 信号中选取 <font face="Times New Roman">3</font> 帧信号，保证 <font face="Times New Roman">label</font> 信号和输出信号的时长一样不就得了？没错，确实是这样做，而且正是该选取过程决定了卷积网络的因果性。</font></p>
+<p>以目前所讨论的这个网络来说，有 <font face="Times New Roman">3</font> 种选取方案，如图 <font face="Times New Roman">1</font> 所示。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图1.jpg">
+</div>
+<center>图 <font face="Times New Roman">1</font>. 一层卷积网络因果性示例</center>
+<p>  </p>
+<ul>
+<li>图 <font face="Times New Roman">1(a)</font> 选取 <font face="Times New Roman">label</font> 信号中的最后 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是因果的。因为从图中可以看出当前时刻的输出帧只利用了当前时刻的输入帧以及历史的两帧信息；</li>
+<li>图 <font face="Times New Roman">1(b)</font> 选取 <font face="Times New Roman">label</font> 信号中最中间的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧以及历史的 <font face="Times New Roman">1</font> 帧信息外，还使用了未来的 <font face="Times New Roman">1</font> 帧信息；</li>
+<li>图 <font face="Times New Roman">1(c)</font> 选取 <font face="Times New Roman">label</font> 信号中最前面的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧外，还使用了未来的 <font face="Times New Roman">2</font> 帧信息；</li>
+</ul>
+<h3 id="font-facetimes-new-roman313font-补零操作"><font face="Times New Roman">3.1.3.</font> 补零操作 </h3>
+<p>通过上述分析，相信读者已经熟悉该如何决定卷积网络的因果性，以及如何控制卷积网络的感受野。那么在实际 <font face="Times New Roman">coding</font> 的过程中，当拥有了输入数据和等时长的 <font face="Times New Roman">label</font> 数据之后，该怎么做，才能实现图 <font face="Times New Roman">1</font> 所示的 <font face="Times New Roman">3</font> 种方式那？主要有以下两种方法：</p>
+<ul>
+<li><font color="red">丢 <font face="Times New Roman">label</font> 中的数据；</font></li>
+<li><font color="red">给输入数据补零。</font></li>
+</ul>
+<p><strong>丢 <font face="Times New Roman">label</font> 中的数据</strong>：这种实现方式其实就是直接根据 <font face="Times New Roman">3.1.2.</font> 小节所分析的来做的。丢弃 <font face="Times New Roman">label</font> 信号中的前两帧信号得到的就是图 <font face="Times New Roman">1(a)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的第一帧和最后一帧信号得到的就是图 <font face="Times New Roman">1(b)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的最后两帧信号得到的就是图 <font face="Times New Roman">1(c)</font> 所表示的；</p>
+<p><strong>给输入数据补零</strong>：那么可不可以保持 <font face="Times New Roman">label</font> 数据不变，通过其他方法来实现那？当然可以！正所谓 <font color="red">“山不过来，我就过去”</font>，既然要求 <font face="Times New Roman">label</font> 数据不变，那就变输入数据，给输入数据补零。相信读者在一些论文或者开源代码中也见过补零这种实现方式。补零相比上述实现方式有什么好处那？笔者考虑了一下，主要想出了以下两点说得过去的原因：</p>
+<ul>
+<li><font color="red">为了不浪费数据。</font>从上述分析可以看到，当卷积网络在时间维度上的 <font face="Times New Roman">kernel</font> 大于 <font face="Times New Roman">1</font> 时，网络的输出时长会比输入时长少 <font face="Times New Roman">kernel - 1</font> 帧。而 <font face="Times New Roman">kernel</font> 越大，网络的输出时长就越小。为了能将辛辛苦苦生成的训练数据全部用上，可以给输入信号补 <font face="Times New Roman">kernel - 1</font> 帧的零，这样就能使得网络的输出时长等于输入时长（有效的输入时长，即补零之前的时长）；</li>
+<li><font color="red">为了和实时推理代码保持一致。</font> 考虑一个实时应用会遇到的一个场景：假设某个音频处理算法运行在时频域（其 <font face="Times New Roman">STFT</font> 的窗长和帧长均为 <font face="Times New Roman">20ms</font>，帧移为 <font face="Times New Roman">10ms</font>），当算法接收到第一帧 <font face="Times New Roman">10ms</font> 信号的时候，为了做 <font face="Times New Roman">STFT</font>，往往需要在前面补一帧 <font face="Times New Roman">10ms</font> 的零，凑足 <font face="Times New Roman">20ms</font>。在因果卷积网络中补零的原因之一也是为了和这种场景保持一致。</li>
+</ul>
+<p><font color="red">不同的补零方式会导致不同的因果关系，</font>下面就详细说说，具体该怎么补零（读者可自行画图分析）：</p>
+<ul>
+<li>为了实现图 <font face="Times New Roman">1(a)</font>，可以在输入数据的最前面补两帧零；</li>
+<li>为了实现图 <font face="Times New Roman">1(b)</font>，可以在输入数据的最前面和最后面各补一帧零；</li>
+<li>为了实现图 <font face="Times New Roman">1(c)</font>，可以在输入数据的最后面补两帧零。</li>
+</ul>
+<h3 id="font-facetimes-new-roman314font-总结"><font face="Times New Roman">3.1.4.</font> 总结 </h3>
+<p>从对一层卷积网络的分析过程来看，可以得到以下两个重要结论：</p>
+<ul>
+<li><font color="red">从 <font face="Times New Roman">label</font> 信号中选取所需信号的过程决定了卷积网络的因果性和感受野；</font></li>
+<li><font color="red">在具体 <font face="Times New Roman">coding</font> 的过程中，可以通过给输入数据补零来实现不同的因果关系</font>。</li>
+</ul>
+<h2 id="font-facetimes-new-roman32font-多层卷积网络"><font face="Times New Roman">3.2.</font> 多层卷积网络 </h2>
+<p>本节考虑包含了两层二维卷积的网络，且每层二维卷积在时间维度上的参数均为：<font face="Times New Roman">kernel = 3，stride = 1</font>。类似于图 <font face="Times New Roman">1</font>，现给出相应的两层 <font face="Times New Roman">CNN</font> 网络的因果性示例图，如图 <font face="Times New Roman">2</font> 所示。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图2.jpg">
+</div>
+<center>图 <font face="Times New Roman">2</font>. 二层卷积网络因果性示例</center>
+<p>  <br>
+需要注意的是，图 <font face="Times New Roman">2</font> 只给出了其中的三种输出结果，还有其余两种输出结果读者可自行分析。通过图 <font face="Times New Roman">2</font> 可以看出：</p>
+<ul>
+<li>图 <font face="Times New Roman">2(a)</font> 表示的是非因果网络，因为输出帧除了利用当前时刻的输入帧外，还使用了未来的 <font face="Times New Roman">4</font> 帧信息；</li>
+<li>图 <font face="Times New Roman">2(b)</font> 表示的是非因果网络，因为输出帧除了利用当前时刻的输入帧以及历史的 <font face="Times New Roman">2</font> 帧信息外，还使用了未来的 <font face="Times New Roman">2</font> 帧信息；</li>
+<li>图 <font face="Times New Roman">2(c)</font> 表示的是因果网络，因为输出帧只利用了当前时刻的输入帧以及历史的 <font face="Times New Roman">4</font> 帧信息。</li>
+</ul>
+<p>与 <font face="Times New Roman">3.1.</font> 节的分析过程一样，在实际 <font face="Times New Roman">coding</font> 过程中，该如何补零才能使得两层 <font face="Times New Roman">CNN</font> 网络实现图 <font face="Times New Roman">2</font> 中所示的因果性那？对于两层 <font face="Times New Roman">CNN</font> 网络来说，笔者能想到两种补零方式：<font color="red">输入层补零</font>和<font color="red">逐层补零</font>。下面就详细讨论下这两种方式，以及各自的优缺点。</p>
+<h3 id="font-facetimes-new-roman321font-输入层补零"><font face="Times New Roman">3.2.1.</font> 输入层补零 </h3>
+<p><font color="red">输入层补零其实就是把两层卷积网络等效于一层卷积网络。</font>上述两层卷积网络可以等效于 <font face="Times New Roman">kernel = 5，stride = 1</font> 的一层卷积网络（只是从因果性和感受野角度来说是可以等效的）。从 <font face="Times New Roman">3.1.3.</font> 小节的分析可知：</p>
+<ul>
+<li>给输入数据的最后面补四帧零，可以实现图 <font face="Times New Roman">2(a)</font>；</li>
+<li>给输入数据的最前面和最后面各补两帧零，可以实现图 <font face="Times New Roman">2(b)</font>；</li>
+<li>给输入数据的最前面补四帧零，可以实现图 <font face="Times New Roman">2(c)</font>。</li>
+</ul>
+<p>也就是说<font color="red">输入层补零只在输入数据上补零</font>，网络隐藏层不需要补零；下面要讨论的<font color="red">逐层补零除了在输入层补零外也在网络隐藏层补零。</font></p>
+<h3 id="font-facetimes-new-roman322font-逐层补零"><font face="Times New Roman">3.2.2.</font> 逐层补零 </h3>
+<p>具体来说，逐层补零在实际 <font face="Times New Roman">coding</font> 的过程中：</p>
+<ul>
+<li>为了实现图 <font face="Times New Roman">2(a)</font>，可以在输入层和隐藏层的最后面分别补两帧零；</li>
+<li>为了实现图 <font face="Times New Roman">2(b)</font>，可以在输入层和隐藏层的最前面和最后面分别补一帧零；</li>
+<li>为了实现图 <font face="Times New Roman">2(c)</font>，可以在输入层和隐藏层的最前面分别补两帧零。</li>
+</ul>
+<p><font color="red">逐层补零只考虑当前层</font>。以图 <font face="Times New Roman">2(a)</font> 为例，输入层为 <font face="Times New Roman">5</font> 帧数据，为了使第一层 <font face="Times New Roman">CNN</font> 的输出也为 <font face="Times New Roman">5</font> 帧数据，并且保持只看当前帧和未来帧的因果性，需要给输入层的最后面补 <font face="Times New Roman">kernel - 1 = 3 - 1 = 2</font> 帧零。同样，为了使第二层 <font face="Times New Roman">CNN</font> 的输出也为 <font face="Times New Roman">5</font> 帧数据，并且保持只看当前帧和未来帧的因果性，需要给第一层 <font face="Times New Roman">CNN</font> 输出（隐藏层）的最后面补 <font face="Times New Roman"> kernel - 1 = 3 - 1 = 2</font> 帧零。可以看出逐层补零保证每层 <font face="Times New Roman">CNN</font> 的输出时长都和 <font face="Times New Roman">label</font> 信号的时长保持一致。</p>
+<h3 id="font-facetimes-new-roman323font-两种补零方式对比"><font face="Times New Roman">3.2.3.</font> 两种补零方式对比 </h3>
+<p>两种不同的补零方式可以说体现出了两种不同的思维方式。</p>
+<ul>
+<li><font color="red">输入层补零</font>：将多层 <font face="Times New Roman">CNN</font> 网络当成一个整体看待。先分析这个整体总共需要补多少零，需要怎么补，然后直接只在输入层操作就行；</li>
+<li><font color="red">逐层补零</font>：将多层 <font face="Times New Roman">CNN</font> 网络中的每一层当成单独的个体看待。根据当前层的 <font face="Times New Roman">kernel</font> 和 <font face="Times New Roman">stride</font> 求出当前层需要补多少零，根据整个网络要满足的因果性和感受野确定当前层的零该怎么补，然后在当前层直接操作就行。 逐层补零能保证每层的输出时长和输入时长（有效的输入时长，即补零之前的时长）一致，继而保证整个网络的输出时长和输入时长一致。当前层只需要干好它自己要干的事就好，不必考虑其他层。层与层之间的关系可以用一句古语来概括 “各人自扫门前雪，莫管他人瓦上霜”。</li>
+</ul>
+<p>下面再举个额外的例子，用以说明在实际 <font face="Times New Roman">coding</font> 过程中两种补零方式分别该怎么做。比如开发者要搭建一个两层 <font face="Times New Roman">CNN</font> 网络，且第一层 <font face="Times New Roman">CNN</font> 的参数配置为：<font face="Times New Roman">kernel = 3，stride = 1</font>，第二层 <font face="Times New Roman">CNN</font> 的参数配置为：<font face="Times New Roman">kernel = 2，stride = 1</font>。现在想要使这个网络的输出帧只能看未来一帧的输入信息。</p>
+<p><strong>输入层补零的做法</strong><br>
+这个两层 <font face="Times New Roman">CNN</font> 网络可以等效为 <font face="Times New Roman">kernel = 4，stride = 1</font> 的一层 <font face="Times New Roman">CNN</font> 网络。因此，需要给输入数据补 <font face="Times New Roman">kernel - 1 = 4 - 1 = 3</font> 帧零。为了只看未来一帧的输入信息，需要将 <font face="Times New Roman">2</font> 帧零补在输入数据的最前面，<font face="Times New Roman">1</font> 帧零补在输入数据的最后面。</p>
+<p><strong>逐层补零的做法</strong><br>
+可知输入层需要补 <font face="Times New Roman">3 - 1 = 2</font> 帧零，第一层 <font face="Times New Roman">CNN</font> 的输出需要补 <font face="Times New Roman">2 - 1 = 1</font> 帧零。接下来就是确定每层的零具体该怎么补。为了只看未来一帧的输入信息，可以有以下两种补零方案：</p>
+<ul>
+<li>输入层需要补的 <font face="Times New Roman">2</font> 帧零全补在最前面，且第一层 <font face="Times New Roman">CNN</font> 的输出需要补的 <font face="Times New Roman">1</font> 帧零补在最后面；这种方式使得第一层 <font face="Times New Roman">CNN</font> 没利用未来的输入信息，而第二层 <font face="Times New Roman">CNN</font> 利用了未来一帧的输入信息。</li>
+<li>输入层需要补的 <font face="Times New Roman">2</font> 帧零在最前面和最后面各补 <font face="Times New Roman">1</font> 帧，且第一层 <font face="Times New Roman">CNN</font> 的输出需要补的 <font face="Times New Roman">1</font> 帧零补在最前面；这种方式使得第一层 <font face="Times New Roman">CNN</font> 利用了未来一帧的输入信息，第二层 <font face="Times New Roman">CNN</font> 没有利用未来的输入信息。</li>
+</ul>
+<p>可以看到，在具体 <font face="Times New Roman">coding</font> 的时候，输入层补零这种方式实现方法唯一，而逐层补零这种方式有多种实现方法。</p>
+<h3 id="font-facetimes-new-roman324font-逐层补零需要注意的地方"><font face="Times New Roman">3.2.4.</font> 逐层补零需要注意的地方 </h3>
+<p>假设一个这样的使用场景：<font face="Times New Roman">1）</font>模型是按照逐层补零的方式实现的因果模型；<font face="Times New Roman">2）</font>在验证模型效果的时候（即推理的时候）直接使用 <font face="Times New Roman">load()</font> 函数加载模型，而且按照线上运行的方式那样，每次给模型输入一帧数据，然后模型输出一帧数据；这个时候得到的输出结果很大概率上是不正确的。这是因为在训练模型的时候，模型的输入数据时长往往远远大于所补零的时长，除了输入数据中比较靠前的数据看到的历史信息是补的零之外，其余输入数据看到的历史信息基本都是有效的语音信息。而在推理过程中，每次只输入一帧数据，这导致输入的所有帧看到的历史信息都是补的零，而不是有效的语音信息。因此，输出结果大概率是不正确的。为了避免这种状况，<font face="Times New Roman">1）</font>只是为了验证模型效果的话，在推理的时候，可以增加模型的输入数据时长，而不是输入一帧数据；<font face="Times New Roman">2）</font>如果非要按照线上运行的方式那样，输入一帧数据输出一帧数据，那么就需要用 <font face="Times New Roman">c/python</font> 实现推理过程，与此同时需要维护好每层网络的输入 <font face="Times New Roman">buffer</font>。这是一项工作量较大的工程。<br>
+同样的场景，输入层补零的方式解决起来相对简单些，只需维护好输入层的 <font face="Times New Roman">buffer</font> 就行。</p>
+<h3 id="font-facetimes-new-roman325font-总结"><font face="Times New Roman">3.2.5.</font> 总结 </h3>
+<p>本节以二层卷积网络为例，分析了多层网络如何通过补零来实现不同的因果性。在实际 <font face="Times New Roman">coding</font> 过程中主要有<font color="red">输入层补零</font>和<font color="red">逐层补零</font>两种方式，可根据需要选择适合的补零方式。</p>
+<h2 id="font-facetimes-new-roman33font-总结"><font face="Times New Roman">3.3.</font> 总结 </h2>
+<p>对于 <font face="Times New Roman">Encoder</font> 架构而言，通过上述的分析可知，不管是一层卷积网络还是多层卷积网络，不管是输入层补零还是逐层补零，如果想要实现的网络是因果的，那么零应该全部补在最前面，如果想要实现的网络是非因果的，那么应该在最后面补零。在最前面补了几帧零，整个网络就使用了多少帧的历史信息。同理，在最后面补了几帧零，整个网络就使用了多少帧的未来信息。</p>
+<h1 id="font-facetimes-new-roman4-encoder-decoderfont-架构"><font face="Times New Roman">4. Encoder-Decoder</font> 架构 </h1>
+<p><font face="Times New Roman">Encoder-Decoder</font> 是一种对称的网络结构。其中，<font face="Times New Roman">Encoder</font> 包含的是卷积网络，<font face="Times New Roman">Decoder</font> 包含的是转置（或称之为反转/逆）卷积网络。而且一般 <font face="Times New Roman">Decoder</font> 中每个转置卷积网络层和与之对应的 <font face="Times New Roman">Encoder</font> 中的卷积网络层的参数配置（<font face="Times New Roman">kernel，stride……</font>）是完全一样的。本节先简单回顾下转置卷积，然后分析一层卷积（转置卷积）网络的因果性，最后分析多层卷积（转置卷积）网络的因果性。</p>
+<h2 id="font-facetimes-new-roman41font-转置卷积"><font face="Times New Roman">4.1.</font> 转置卷积 </h2>
+<p>与卷积相反，转置卷积会增加输入特征的维度。本节以 <font face="Times New Roman">kernel = 3，stride = 1</font> 的一层转置卷积网络为例进行说明。</p>
+<p>当给同等参数配置下的一层卷积网络输入 <font face="Times New Roman">5</font> 帧的音频信号时，它会输出 <font face="Times New Roman">3</font> 帧的音频信号。而如果将这 <font face="Times New Roman">3</font> 帧音频信号输入给一层转置卷积网络，那么将会输出 <font face="Times New Roman">5</font> 帧音频信号。图 <font face="Times New Roman">3</font> 展示了该转置卷积网络的计算过程。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图3.jpg">
+</div>
+<center>图 <font face="Times New Roman">3</font>. 转置卷积网络计算过程示例</center>
+<p>  <br>
+由于 <font face="Times New Roman">kernel = 3</font>，所以转置卷积网络每一帧输入所对应的输出都是 <font face="Times New Roman">3</font> 帧，将对应位置上的所有帧的输出相加得到转置卷积网络的最终输出。比如输出中的第二帧等于第一帧输出的第二个元素与第二帧输出的第一个元素之和，如图 <font face="Times New Roman">3</font> 中红圈所示。</p>
+<h2 id="font-facetimes-new-roman42font-一层卷积转置卷积网络"><font face="Times New Roman">4.2.</font> 一层卷积（转置卷积）网络 </h2>
+<p>考虑一个 <font face="Times New Roman">kernel = 3，stride = 1</font> 的一层卷积（转置卷积）网络。假设网络的输入是时长为 <font face="Times New Roman">5</font> 帧的音频信号，那么经过卷积网络之后，时长变为 <font face="Times New Roman">3</font> 帧；接着，该 <font face="Times New Roman">3</font> 帧信号经过转置卷积网络之后，输出时长又变为 <font face="Times New Roman">5</font> 帧，与输入信号和 <font face="Times New Roman">label</font> 信号的时长是相等的。因此，此时可以正常计算 <font face="Times New Roman">loss</font> 函数。注意在此过程中，是没有额外的补零或者其他什么操作的。那么，此时网络的因果性和感受野是怎么样的那？可以通过图 <font face="Times New Roman">4</font> 分析一下整个计算过程。以输出的第 <font face="Times New Roman">3</font> 帧为例，可以看出计算该帧的过程中，除了使用输入的当前帧和历史两帧信息外，还使用了未来两帧信息。其余输出帧所使用的输入帧信息可以通过图 <font face="Times New Roman">4</font> 中的箭头走向分析得到。可以看到，此时网络是非因果网络，且使用了未来两帧的信息。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图4.jpg">
+</div>
+<center>图 <font face="Times New Roman">4</font>. 一层卷积网络和转置卷积网络计算过程示例</center>
+<h3 id="font-facetimes-new-roman421font--控制网络的因果性和感受野"><font face="Times New Roman">4.2.1.</font>  控制网络的因果性和感受野 </h3>
+<p>那么，在具体 <font face="Times New Roman">coding</font> 过程中，该怎么做才能得到一个因果网络，并且使得该网络输出的有效时长还是 <font face="Times New Roman">5</font> 帧那？答案是<font color="red">输入数据补零，输出数据丢帧</font>。图 <font face="Times New Roman">5</font> 展示了该计算过程。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图5.jpg">
+</div>
+<center>图 <font face="Times New Roman">5</font>. 因果网络计算过程示例</center>
+<p>  <br>
+在输入数据的最前面补两帧零之后，网络的总体输入变为了 <font face="Times New Roman">7</font> 帧，经过卷积和转置卷积之后，网络的输出依然是 <font face="Times New Roman">7</font> 帧。但是 <font face="Times New Roman">label</font> 数据时长和补零前的输入数据时长一样，都是 <font face="Times New Roman">5</font> 帧。此时，为了计算 <font face="Times New Roman">loss</font> 函数，需要从输出的 <font face="Times New Roman">7</font> 帧数据中丢弃 <font face="Times New Roman">2</font> 帧数据。该丢弃过程在决定网络的因果性和感受野方面也起到了重要作用。</p>
+<p>从图 <font face="Times New Roman">5</font> 中的箭头走向可以分析出，为了得到因果网络，只能丢弃输出数据中的最后两帧；同样可以分析出，为了得到非因果网络，且使用未来一帧的输入信息，只能丢弃输出数据中的第一帧和最后一帧；为了得到非因果网络，且使用未来两帧的输入信息，只能丢弃输出数据中最前面的两帧。</p>
+<h3 id="font-facetimes-new-roman422font-总结"><font face="Times New Roman">4.2.2.</font> 总结 </h3>
+<p>本节介绍了如何通过给输入数据补零和丢弃输出数据来达到控制网络因果性和感受野的目的。本节给出的示例只是在输入数据的最前面补零，读者可按照同样的方法分析一下给输入数据最后面补零，或者最前面和最后面都补零会达到什么样的效果。</p>
+<h2 id="font-facetimes-new-roman43font-多层卷积转置卷积网络"><font face="Times New Roman">4.3.</font> 多层卷积（转置卷积）网络 </h2>
+<p>可使用 <font face="Times New Roman">3.2.</font> 小节中的分析方法，对多层卷积（转置卷积）网络的因果性和感受野进行分析。即，可以把多层卷积（转置卷积）网络当成一个整体，只在输入数据和输出数据上做相应的补零或丢帧操作。也可以把网络中的每一层当成一个单独的个体，在每一层上做相应的操作，通过控制每一层的因果性和感受野来控制整个网络的因果性和感受野。具体分析过程，此处不在赘述。</p>
+<p>如果想要使 <font face="Times New Roman">Encoder-Decoder</font> 架构的网络在实际推理的过程中输入一帧数据输出一帧数据，那么，同样也会遇到 <font face="Times New Roman">3.2.4.</font> 小节所提到的问题。不管训练的时候采用的是哪种补零（或者丢帧）方式，都需要动手实现网络的推理过程，并维护好每一层的输入输出 <font face="Times New Roman">buffer</font>。</p>
+<h2 id="font-facetimes-new-roman44font-总结"><font face="Times New Roman">4.4.</font> 总结 </h2>
+<p>对于 <font face="Times New Roman">Encoder-Decoder</font> 架构的网络来说，为了控制网络的因果性和感受野，在实际 <font face="Times New Roman">coding</font> 的过程中，可以通过给输入数据补零，并且丢弃输出数据中的帧来实现。</p>
+<h1 id="font-facetimes-new-roman5font-后记"><font face="Times New Roman">5.</font> 后记 </h1>
+<p>前前后后历时一周，终于抽时间把这篇很久之前就想写的博客写完了。笔者是想到哪写到哪，有的点可能也没考虑到，如果读者感觉哪块写的不清楚或者有不同的意见和建议，欢迎提出，大家一起探讨。</p>
+<p>“先把书读厚，再把书读薄”。再次感谢读者阅读到此处，和笔者一起经历了 “先把书读厚” 的过程。下面献上一张图片，大家一起 “再把书读薄”。</p>
+<div style="text-align: center;">
+  <img src="./causal-cnn_files/图6.jpg">
+</div>
+<p>这幅图是 <font face="Times New Roman">Ke Tan，DeLiang Wang</font> 的论文 <font face="Times New Roman">"A Convolutional Recurrent Neural Network for Real-time speech enhancement"</font> 中的图，笔者就是根据这幅图理解的因果卷积。从下往上看，这幅图可以理解为 <font face="Times New Roman">Encoder</font> 的计算过程，从上往下看，这幅图可以理解为 <font face="Times New Roman">Decoder</font> 的计算过程。只要能完全理解这幅图片，什么 <font face="Times New Roman">Encoder</font> 架构，<font face="Times New Roman">Encoder-Decoder</font> 架构，什么输入层补零，逐层补零都不是问题，可以做到 “一图走天下”。</p>
+<p>在 <font face="Times New Roman">CNN</font> 的基础上能构建的网络形式有很多，比如设置 <font face="Times New Roman">stride&gt;1，dilation&gt;1</font>，比如网络中加入残差链接等。在 <font face="Times New Roman">coding</font> 的过程中，需要认真分析搭建的网络结构，以正确地控制网络的因果性和感受野。</p>
+
+      </div>
+      
+      
+    
+    
+    
+    
+    
+    
+  </body></html>
