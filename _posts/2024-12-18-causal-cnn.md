@@ -7,6 +7,7 @@ tags: 卷积神经网络 CNN
 categories: 神经网络
 ---
 
+````markdown
 {% toc %}
 
 # <font face="Times New Roman">1.</font> 引言
@@ -170,3 +171,4 @@ categories: 神经网络
 这幅图是 <font face="Times New Roman">Ke Tan，DeLiang Wang</font> 的论文 <font face="Times New Roman">"A Convolutional Recurrent Neural Network for Real-time speech enhancement"</font> 中的图，笔者就是根据这幅图理解的因果卷积。从下往上看，这幅图可以理解为 <font face="Times New Roman">Encoder</font> 的计算过程，从上往下看，这幅图可以理解为 <font face="Times New Roman">Decoder</font> 的计算过程。只要能完全理解这幅图片，什么 <font face="Times New Roman">Encoder</font> 架构，<font face="Times New Roman">Encoder-Decoder</font> 架构，什么输入层补零，逐层补零都不是问题，可以做到 “一图走天下”。
 
 在 <font face="Times New Roman">CNN</font> 的基础上能构建的网络形式有很多，比如设置 <font face="Times New Roman">stride>1，dilation>1</font>，比如网络中加入残差链接等。在 <font face="Times New Roman">coding</font> 的过程中，需要认真分析搭建的网络结构，以正确地控制网络的因果性和感受野。
+````
