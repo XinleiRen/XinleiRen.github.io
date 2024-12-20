@@ -64,9 +64,7 @@ Encoder 架构主要由卷积网络构成， 该节先从最简单的一层卷�
 
 以目前所讨论的这个网络来说，有 3 种选取方案，如图 1 所示。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig1.jpg"/>
-</div>
+{% include figure.liquid path="/assets/img/causal_cnn/图1.jpg" class="img-fluid rounded" %}
 <center>图 1. 一层卷积网络因果性示例</center><br>
 
 * 图 1(a) 选取 label 信号中的最后 3 帧，这种选取方式确定了该网络是因果的。因为从图中可以看出当前时刻的输出帧只利用了当前时刻的输入帧以及历史的两帧信息；
@@ -97,9 +95,7 @@ Encoder 架构主要由卷积网络构成， 该节先从最简单的一层卷�
 ## 3.2. 多层卷积网络
 本节考虑包含了两层二维卷积的网络，且每层二维卷积在时间维度上的参数均为：kernel = 3，stride = 1。类似于图 1，现给出相应的两层 CNN 网络的因果性示例图，如图 2 所示。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig2.jpg"/>
-</div>
+{% include figure.liquid path="/assets/img/causal_cnn/图2.jpg" class="img-fluid rounded" %}
 <center>图 2. 二层卷积网络因果性示例</center><br>
 
 需要注意的是，图 2 只给出了其中的三种输出结果，还有其余两种输出结果读者可自行分析。通过图 2 可以看出：
@@ -160,9 +156,7 @@ Encoder-Decoder 是一种对称的网络结构。其中，Encoder 包含的是�
 
 当给同等参数配置下的一层卷积网络输入 5 帧的音频信号时，它会输出 3 帧的音频信号。而如果将这 3 帧音频信号输入给一层转置卷积网络，那么将会输出 5 帧音频信号。图 3 展示了该转置卷积网络的计算过程。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig3.jpg"/>
-</div>
+{% include figure.liquid path="/assets/img/causal_cnn/图3.jpg" class="img-fluid rounded" %}
 <center>图 3. 转置卷积网络计算过程示例</center><br>
 
 由于 kernel = 3，所以转置卷积网络每一帧输入所对应的输出都是 3 帧，将对应位置上的所有帧的输出相加得到转置卷积网络的最终输出。比如输出中的第二帧等于第一帧输出的第二个元素与第二帧输出的第一个元素之和，如图 3 中红圈所示。
@@ -170,17 +164,13 @@ Encoder-Decoder 是一种对称的网络结构。其中，Encoder 包含的是�
 ## 4.2. 一层卷积（转置卷积）网络
 考虑一个 kernel = 3，stride = 1 的一层卷积（转置卷积）网络。假设网络的输入是时长为 5 帧的音频信号，那么经过卷积网络之后，时长变为 3 帧；接着，该 3 帧信号经过转置卷积网络之后，输出时长又变为 5 帧，与输入信号和 label 信号的时长是相等的。因此，此时可以正常计算 loss 函数。注意在此过程中，是没有额外的补零或者其他什么操作的。那么，此时网络的因果性和感受野是怎么样的那？可以通过图 4 分析一下整个计算过程。以输出的第 3 帧为例，可以看出计算该帧的过程中，除了使用输入的当前帧和历史两帧信息外，还使用了未来两帧信息。其余输出帧所使用的输入帧信息可以通过图 4 中的箭头走向分析得到。可以看到，此时网络是非因果网络，且使用了未来两帧的信息。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig4.jpg"/>
-</div>
+{% include figure.liquid path="/assets/img/causal_cnn/图4.jpg" class="img-fluid rounded" %}
 <center>图 4. 一层卷积网络和转置卷积网络计算过程示例</center>
 
 ### 4.2.1. 控制网络的因果性和感受野
 那么，在具体 coding 过程中，该怎么做才能得到一个因果网络，并且使得该网络输出的有效时长还是 5 帧那？答案是输入数据补零，输出数据丢帧。图 5 展示了该计算过程。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig5.jpg"/>
-</div>
+{% include figure.liquid path="/assets/img/causal_cnn/图5.jpg" class="img-fluid rounded" %}
 <center>图 5. 因果网络计算过程示例</center><br>
 
 在输入数据的最前面补两帧零之后，网络的总体输入变为了 7 帧，经过卷积和转置卷积之后，网络的输出依然是 7 帧。但是 label 数据时长和补零前的输入数据时长一样，都是 5 帧。此时，为了计算 loss 函数，需要从输出的 7 帧数据中丢弃 2 帧数据。该丢弃过程在决定网络的因果性和感受野方面也起到了重要作用。
@@ -203,9 +193,7 @@ Encoder-Decoder 是一种对称的网络结构。其中，Encoder 包含的是�
 
 “先把书读厚，再把书读薄”。再次感谢读者阅读到此处，和笔者一起经历了 “先把书读厚” 的过程。下面献上一张图片，大家一起 “再把书读薄”。
 
-<div style="text-align: center;">
-  <img src="/assets/img/causal-cnn/fig6.jpg"/>
-</div><br>
+{% include figure.liquid path="/assets/img/causal_cnn/图6.jpg" class="img-fluid rounded" %}<br>
 
 这幅图是 Ke Tan，DeLiang Wang 的论文 "A Convolutional Recurrent Neural Network for Real-time speech enhancement" 中的图，笔者就是根据这幅图理解的因果卷积。从下往上看，这幅图可以理解为 Encoder 的计算过程，从上往下看，这幅图可以理解为 Decoder 的计算过程。只要能完全理解这幅图片，什么 Encoder 架构，Encoder-Decoder 架构，什么输入层补零，逐层补零都不是问题，可以做到 “一图走天下”。
 
