@@ -7,6 +7,8 @@ tags: 卷积神经网络 CNN
 categories: 神经网络
 ---
 
+{% toc %}
+
 # <font face="Times New Roman">1.</font> 引言
 音频信号处理已经进入了神经网络时代，而 <font face="Times New Roman">CNN</font> 由于其强大的建模能力，已被广泛地应用在了各种音频信号处理网络中，像最近几届 <font face="Times New Roman">DNS Challenge</font> 的冠军所提出的网络均大量使用了 <font face="Times New Roman">CNN</font>。与图像处理不同，音频信号处理在大多数应用场景下都需要满足实时性要求，比如在线会议场景，直播场景等。满足实时性一般需要满足以下两个条件：<font color='red'>算法是因果的</font>且<font color='red'>计算复杂度要低</font>。本文主要讨论如何控制 <font face="Times New Roman">CNN</font> 网络的因果性，并不对其计算复杂度做过多讨论。
 
