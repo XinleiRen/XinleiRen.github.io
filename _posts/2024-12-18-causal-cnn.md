@@ -68,7 +68,7 @@ categories: 神经网络
 ## <font face="Times New Roman">3.2.</font> 多层卷积网络
 本节考虑包含了两层二维卷积的网络，且每层二维卷积在时间维度上的参数均为：<font face="Times New Roman">kernel = 3，stride = 1</font>。类似于图 <font face="Times New Roman">1</font>，现给出相应的两层 <font face="Times New Roman">CNN</font> 网络的因果性示例图，如图 <font face="Times New Roman">2</font> 所示。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图2.jpg" class="img-fluid rounded" %}图 <font face="Times New Roman">2</font>. 二层卷积网络因果性示例</center>
+{% include figure.liquid path="/assets/img/causal_cnn/图2.jpg" class="img-fluid rounded" %}<center>图 <font face="Times New Roman">2</font>. 二层卷积网络因果性示例</center>
 
 &emsp;&emsp;
 需要注意的是，图 <font face="Times New Roman">2</font> 只给出了其中的三种输出结果，还有其余两种输出结果读者可自行分析。通过图 <font face="Times New Roman">2</font> 可以看出：
@@ -129,7 +129,7 @@ categories: 神经网络
 
 当给同等参数配置下的一层卷积网络输入 <font face="Times New Roman">5</font> 帧的音频信号时，它会输出 <font face="Times New Roman">3</font> 帧的音频信号。而如果将这 <font face="Times New Roman">3</font> 帧音频信号输入给一层转置卷积网络，那么将会输出 <font face="Times New Roman">5</font> 帧音频信号。图 <font face="Times New Roman">3</font> 展示了该转置卷积网络的计算过程。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图3.jpg" class="img-fluid rounded" %}图 <font face="Times New Roman">3</font>. 转置卷积网络计算过程示例</center>
+{% include figure.liquid path="/assets/img/causal_cnn/图3.jpg" class="img-fluid rounded" %}<center>图 <font face="Times New Roman">3</font>. 转置卷积网络计算过程示例</center>
 
 &emsp;&emsp;
 由于 <font face="Times New Roman">kernel = 3</font>，所以转置卷积网络每一帧输入所对应的输出都是 <font face="Times New Roman">3</font> 帧，将对应位置上的所有帧的输出相加得到转置卷积网络的最终输出。比如输出中的第二帧等于第一帧输出的第二个元素与第二帧输出的第一个元素之和，如图 <font face="Times New Roman">3</font> 中红圈所示。
@@ -137,12 +137,12 @@ categories: 神经网络
 ## <font face="Times New Roman">4.2.</font> 一层卷积（转置卷积）网络
 考虑一个 <font face="Times New Roman">kernel = 3，stride = 1</font> 的一层卷积（转置卷积）网络。假设网络的输入是时长为 <font face="Times New Roman">5</font> 帧的音频信号，那么经过卷积网络之后，时长变为 <font face="Times New Roman">3</font> 帧；接着，该 <font face="Times New Roman">3</font> 帧信号经过转置卷积网络之后，输出时长又变为 <font face="Times New Roman">5</font> 帧，与输入信号和 <font face="Times New Roman">label</font> 信号的时长是相等的。因此，此时可以正常计算 <font face="Times New Roman">loss</font> 函数。注意在此过程中，是没有额外的补零或者其他什么操作的。那么，此时网络的因果性和感受野是怎么样的那？可以通过图 <font face="Times New Roman">4</font> 分析一下整个计算过程。以输出的第 <font face="Times New Roman">3</font> 帧为例，可以看出计算该帧的过程中，除了使用输入的当前帧和历史两帧信息外，还使用了未来两帧信息。其余输出帧所使用的输入帧信息可以通过图 <font face="Times New Roman">4</font> 中的箭头走向分析得到。可以看到，此时网络是非因果网络，且使用了未来两帧的信息。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图4.jpg" class="img-fluid rounded" %}图 <font face="Times New Roman">4</font>. 一层卷积网络和转置卷积网络计算过程示例</center>
+{% include figure.liquid path="/assets/img/causal_cnn/图4.jpg" class="img-fluid rounded" %}<center>图 <font face="Times New Roman">4</font>. 一层卷积网络和转置卷积网络计算过程示例</center>
 
 ### <font face="Times New Roman">4.2.1.</font>  控制网络的因果性和感受野
 那么，在具体 <font face="Times New Roman">coding</font> 过程中，该怎么做才能得到一个因果网络，并且使得该网络输出的有效时长还是 <font face="Times New Roman">5</font> 帧那？答案是<font color='red'>输入数据补零，输出数据丢帧</font>。图 <font face="Times New Roman">5</font> 展示了该计算过程。
 
-{% include figure.liquid path="/assets/img/causal_cnn/图5.jpg" class="img-fluid rounded" %}图 <font face="Times New Roman">5</font>. 因果网络计算过程示例</center>
+{% include figure.liquid path="/assets/img/causal_cnn/图5.jpg" class="img-fluid rounded" %}<center>图 <font face="Times New Roman">5</font>. 因果网络计算过程示例</center>
 
 &emsp;&emsp;
 在输入数据的最前面补两帧零之后，网络的总体输入变为了 <font face="Times New Roman">7</font> 帧，经过卷积和转置卷积之后，网络的输出依然是 <font face="Times New Roman">7</font> 帧。但是 <font face="Times New Roman">label</font> 数据时长和补零前的输入数据时长一样，都是 <font face="Times New Roman">5</font> 帧。此时，为了计算 <font face="Times New Roman">loss</font> 函数，需要从输出的 <font face="Times New Roman">7</font> 帧数据中丢弃 <font face="Times New Roman">2</font> 帧数据。该丢弃过程在决定网络的因果性和感受野方面也起到了重要作用。
