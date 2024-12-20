@@ -7,8 +7,6 @@ tags: 卷积神经网络 CNN
 categories: 神经网络
 ---
 
-[TOC]
-
 # <font face="Times New Roman">1.</font> 引言
 音频信号处理已经进入了神经网络时代，而 <font face="Times New Roman">CNN</font> 由于其强大的建模能力，已被广泛地应用在了各种音频信号处理网络中，像最近几届 <font face="Times New Roman">DNS Challenge</font> 的冠军所提出的网络均大量使用了 <font face="Times New Roman">CNN</font>。与图像处理不同，音频信号处理在大多数应用场景下都需要满足实时性要求，比如在线会议场景，直播场景等。满足实时性一般需要满足以下两个条件：<font color='red'>算法是因果的</font>且<font color='red'>计算复杂度要低</font>。本文主要讨论如何控制 <font face="Times New Roman">CNN</font> 网络的因果性，并不对其计算复杂度做过多讨论。
 
@@ -37,20 +35,20 @@ categories: 神经网络
 
 以目前所讨论的这个网络来说，有 <font face="Times New Roman">3</font> 种选取方案，如图 <font face="Times New Roman">1</font> 所示。
 
-![图1](/assets/img/causal_cnn图1.jpg "图1")
+![图1](/assets/img/causal_cnn/图1.jpg "图1")
 <center>图 <font face="Times New Roman">1</font>. 一层卷积网络因果性示例</center>
 
 &emsp;&emsp;
 * 图<font face="Times New Roman">1(a)</font> 选取 <font face="Times New Roman">label</font> 信号中的最后 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是因果的。因为从图中可以看出当前时刻的输出帧只利用了当前时刻的输入帧以及历史的两帧信息；
 * 图<font face="Times New Roman">1(b)</font> 选取 <font face="Times New Roman">label</font> 信号中最中间的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧以及历史的 <font face="Times New Roman">1</font> 帧信息外，还使用了未来的 <font face="Times New Roman">1</font> 帧信息；
-* 图<font face="Times New Roman">1\(c\)</font> 选取 <font face="Times New Roman">label</font> 信号中最前面的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧外，还使用了未来的 <font face="Times New Roman">2</font> 帧信息；
+* 图<font face="Times New Roman">1(c)</font> 选取 <font face="Times New Roman">label</font> 信号中最前面的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧外，还使用了未来的 <font face="Times New Roman">2</font> 帧信息；
 
 ### <font face="Times New Roman">3.1.3.</font> 补零操作
 通过上述分析，相信读者已经熟悉该如何决定卷积网络的因果性，以及如何控制卷积网络的感受野。那么在实际 <font face="Times New Roman">coding</font> 的过程中，当拥有了输入数据和等时长的 <font face="Times New Roman">label</font> 数据之后，该怎么做，才能实现图 <font face="Times New Roman">1</font> 所示的 <font face="Times New Roman">3</font> 种方式那？主要有以下两种方法：
 * <font color='red'>丢 <font face="Times New Roman">label</font> 中的数据；</font>
 * <font color='red'>给输入数据补零。</font>
 
-**丢 <font face="Times New Roman">label</font> 中的数据**：这种实现方式其实就是直接根据 <font face="Times New Roman">3.1.2.</font> 小节所分析的来做的。丢弃 <font face="Times New Roman">label</font> 信号中的前两帧信号得到的就是图<font face="Times New Roman">1(a)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的第一帧和最后一帧信号得到的就是图<font face="Times New Roman">1(b)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的最后两帧信号得到的就是图<font face="Times New Roman">1\(c\)</font> 所表示的；
+**丢 <font face="Times New Roman">label</font> 中的数据**：这种实现方式其实就是直接根据 <font face="Times New Roman">3.1.2.</font> 小节所分析的来做的。丢弃 <font face="Times New Roman">label</font> 信号中的前两帧信号得到的就是图<font face="Times New Roman">1(a)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的第一帧和最后一帧信号得到的就是图<font face="Times New Roman">1(b)</font> 所表示的；丢弃 <font face="Times New Roman">label</font> 信号中的最后两帧信号得到的就是图<font face="Times New Roman">1(c)</font> 所表示的；
 
 **给输入数据补零**：那么可不可以保持 <font face="Times New Roman">label</font> 数据不变，通过其他方法来实现那？当然可以！正所谓 <font color='red'>“山不过来，我就过去”</font>，既然要求 <font face="Times New Roman">label</font> 数据不变，那就变输入数据，给输入数据补零。相信读者在一些论文或者开源代码中也见过补零这种实现方式。补零相比上述实现方式有什么好处那？笔者考虑了一下，主要想出了以下两点说得过去的原因：
 * <font color='red'>为了不浪费数据。</font>从上述分析可以看到，当卷积网络在时间维度上的 <font face="Times New Roman">kernel</font> 大于 <font face="Times New Roman">1</font> 时，网络的输出时长会比输入时长少 <font face="Times New Roman">kernel - 1</font> 帧。而 <font face="Times New Roman">kernel</font> 越大，网络的输出时长就越小。为了能将辛辛苦苦生成的训练数据全部用上，可以给输入信号补 <font face="Times New Roman">kernel - 1</font> 帧的零，这样就能使得网络的输出时长等于输入时长（有效的输入时长，即补零之前的时长）；
@@ -59,7 +57,7 @@ categories: 神经网络
 <font color='red'>不同的补零方式会导致不同的因果关系，</font>下面就详细说说，具体该怎么补零（读者可自行画图分析）：
 * 为了实现图<font face="Times New Roman">1(a)</font>，可以在输入数据的最前面补两帧零；
 * 为了实现图<font face="Times New Roman">1(b)</font>，可以在输入数据的最前面和最后面各补一帧零；
-* 为了实现图<font face="Times New Roman">1\(c\)</font>，可以在输入数据的最后面补两帧零。
+* 为了实现图<font face="Times New Roman">1(c)</font>，可以在输入数据的最后面补两帧零。
 
 ### <font face="Times New Roman">3.1.4.</font> 总结
 从对一层卷积网络的分析过程来看，可以得到以下两个重要结论：
@@ -69,14 +67,14 @@ categories: 神经网络
 ## <font face="Times New Roman">3.2.</font> 多层卷积网络
 本节考虑包含了两层二维卷积的网络，且每层二维卷积在时间维度上的参数均为：<font face="Times New Roman">kernel = 3，stride = 1</font>。类似于图 <font face="Times New Roman">1</font>，现给出相应的两层 <font face="Times New Roman">CNN</font> 网络的因果性示例图，如图 <font face="Times New Roman">2</font> 所示。
 
-![图2](/assets/img/causal_cnn图2.jpg "图2")
+![图2](/assets/img/causal_cnn/图2.jpg "图2")
 <center>图 <font face="Times New Roman">2</font>. 二层卷积网络因果性示例</center>
 
 &emsp;&emsp;
 需要注意的是，图 <font face="Times New Roman">2</font> 只给出了其中的三种输出结果，还有其余两种输出结果读者可自行分析。通过图 <font face="Times New Roman">2</font> 可以看出：
 * 图<font face="Times New Roman">2(a)</font> 表示的是非因果网络，因为输出帧除了利用当前时刻的输入帧外，还使用了未来的 <font face="Times New Roman">4</font> 帧信息；
 * 图<font face="Times New Roman">2(b)</font> 表示的是非因果网络，因为输出帧除了利用当前时刻的输入帧以及历史的 <font face="Times New Roman">2</font> 帧信息外，还使用了未来的 <font face="Times New Roman">2</font> 帧信息；
-* 图<font face="Times New Roman">2\(c\)</font> 表示的是因果网络，因为输出帧只利用了当前时刻的输入帧以及历史的 <font face="Times New Roman">4</font> 帧信息。
+* 图<font face="Times New Roman">2(c)</font> 表示的是因果网络，因为输出帧只利用了当前时刻的输入帧以及历史的 <font face="Times New Roman">4</font> 帧信息。
 
 与 <font face="Times New Roman">3.1.</font> 节的分析过程一样，在实际 <font face="Times New Roman">coding</font> 过程中，该如何补零才能使得两层 <font face="Times New Roman">CNN</font> 网络实现图 <font face="Times New Roman">2</font> 中所示的因果性那？对于两层 <font face="Times New Roman">CNN</font> 网络来说，笔者能想到两种补零方式：<font color='red'>输入层补零</font>和<font color='red'>逐层补零</font>。下面就详细讨论下这两种方式，以及各自的优缺点。
 
@@ -84,7 +82,7 @@ categories: 神经网络
 <font color='red'>输入层补零其实就是把两层卷积网络等效于一层卷积网络。</font>上述两层卷积网络可以等效于 <font face="Times New Roman">kernel = 5，stride = 1</font> 的一层卷积网络（只是从因果性和感受野角度来说是可以等效的）。从 <font face="Times New Roman">3.1.3.</font> 小节的分析可知：
 * 给输入数据的最后面补四帧零，可以实现图<font face="Times New Roman">2(a)</font>；
 * 给输入数据的最前面和最后面各补两帧零，可以实现图<font face="Times New Roman">2(b)</font>；
-* 给输入数据的最前面补四帧零，可以实现图<font face="Times New Roman">2\(c\)</font>。
+* 给输入数据的最前面补四帧零，可以实现图<font face="Times New Roman">2(c)</font>。
 
 也就是说<font color='red'>输入层补零只在输入数据上补零</font>，网络隐藏层不需要补零；下面要讨论的<font color='red'>逐层补零除了在输入层补零外也在网络隐藏层补零。</font>
 
@@ -92,7 +90,7 @@ categories: 神经网络
 具体来说，逐层补零在实际 <font face="Times New Roman">coding</font> 的过程中：
 * 为了实现图<font face="Times New Roman">2(a)</font>，可以在输入层和隐藏层的最后面分别补两帧零；
 * 为了实现图<font face="Times New Roman">2(b)</font>，可以在输入层和隐藏层的最前面和最后面分别补一帧零；
-* 为了实现图<font face="Times New Roman">2\(c\)</font>，可以在输入层和隐藏层的最前面分别补两帧零。
+* 为了实现图<font face="Times New Roman">2(c)</font>，可以在输入层和隐藏层的最前面分别补两帧零。
 
 <font color='red'>逐层补零只考虑当前层</font>。以图<font face="Times New Roman">2(a)</font> 为例，输入层为 <font face="Times New Roman">5</font> 帧数据，为了使第一层 <font face="Times New Roman">CNN</font> 的输出也为 <font face="Times New Roman">5</font> 帧数据，并且保持只看当前帧和未来帧的因果性，需要给输入层的最后面补 <font face="Times New Roman">kernel - 1 = 3 - 1 = 2</font> 帧零。同样，为了使第二层 <font face="Times New Roman">CNN</font> 的输出也为 <font face="Times New Roman">5</font> 帧数据，并且保持只看当前帧和未来帧的因果性，需要给第一层 <font face="Times New Roman">CNN</font> 输出（隐藏层）的最后面补 <font face="Times New Roman"> kernel - 1 = 3 - 1 = 2</font> 帧零。可以看出逐层补零保证每层 <font face="Times New Roman">CNN</font> 的输出时长都和 <font face="Times New Roman">label</font> 信号的时长保持一致。
 
@@ -131,7 +129,7 @@ categories: 神经网络
 
 当给同等参数配置下的一层卷积网络输入 <font face="Times New Roman">5</font> 帧的音频信号时，它会输出 <font face="Times New Roman">3</font> 帧的音频信号。而如果将这 <font face="Times New Roman">3</font> 帧音频信号输入给一层转置卷积网络，那么将会输出 <font face="Times New Roman">5</font> 帧音频信号。图 <font face="Times New Roman">3</font> 展示了该转置卷积网络的计算过程。
 
-![图3](/assets/img/causal_cnn图3.jpg "图3")
+![图3](/assets/img/causal_cnn/图3.jpg "图3")
 <center>图 <font face="Times New Roman">3</font>. 转置卷积网络计算过程示例</center>
 
 &emsp;&emsp;
@@ -140,13 +138,13 @@ categories: 神经网络
 ## <font face="Times New Roman">4.2.</font> 一层卷积（转置卷积）网络
 考虑一个 <font face="Times New Roman">kernel = 3，stride = 1</font> 的一层卷积（转置卷积）网络。假设网络的输入是时长为 <font face="Times New Roman">5</font> 帧的音频信号，那么经过卷积网络之后，时长变为 <font face="Times New Roman">3</font> 帧；接着，该 <font face="Times New Roman">3</font> 帧信号经过转置卷积网络之后，输出时长又变为 <font face="Times New Roman">5</font> 帧，与输入信号和 <font face="Times New Roman">label</font> 信号的时长是相等的。因此，此时可以正常计算 <font face="Times New Roman">loss</font> 函数。注意在此过程中，是没有额外的补零或者其他什么操作的。那么，此时网络的因果性和感受野是怎么样的那？可以通过图 <font face="Times New Roman">4</font> 分析一下整个计算过程。以输出的第 <font face="Times New Roman">3</font> 帧为例，可以看出计算该帧的过程中，除了使用输入的当前帧和历史两帧信息外，还使用了未来两帧信息。其余输出帧所使用的输入帧信息可以通过图 <font face="Times New Roman">4</font> 中的箭头走向分析得到。可以看到，此时网络是非因果网络，且使用了未来两帧的信息。
 
-![图4](/assets/img/causal_cnn图4.jpg "图4")
+![图4](/assets/img/causal_cnn/图4.jpg "图4")
 <center>图 <font face="Times New Roman">4</font>. 一层卷积网络和转置卷积网络计算过程示例</center>
 
 ### <font face="Times New Roman">4.2.1.</font>  控制网络的因果性和感受野
 那么，在具体 <font face="Times New Roman">coding</font> 过程中，该怎么做才能得到一个因果网络，并且使得该网络输出的有效时长还是 <font face="Times New Roman">5</font> 帧那？答案是<font color='red'>输入数据补零，输出数据丢帧</font>。图 <font face="Times New Roman">5</font> 展示了该计算过程。
 
-![图5](/assets/img/causal_cnn图5.jpg "图5")
+![图5](/assets/img/causal_cnn/图5.jpg "图5")
 <center>图 <font face="Times New Roman">5</font>. 因果网络计算过程示例</center>
 
 &emsp;&emsp;
@@ -170,7 +168,7 @@ categories: 神经网络
 
 “先把书读厚，再把书读薄”。再次感谢读者阅读到此处，和笔者一起经历了 “先把书读厚” 的过程。下面献上一张图片，大家一起 “再把书读薄”。
 
-![图6](/assets/img/causal_cnn图6.jpg "图6")
+![图6](/assets/img/causal_cnn/图6.jpg "图6")
 
 这幅图是 <font face="Times New Roman">Ke Tan，DeLiang Wang</font> 的论文 <font face="Times New Roman">"A Convolutional Recurrent Neural Network for Real-time speech enhancement"</font> 中的图，笔者就是根据这幅图理解的因果卷积。从下往上看，这幅图可以理解为 <font face="Times New Roman">Encoder</font> 的计算过程，从上往下看，这幅图可以理解为 <font face="Times New Roman">Decoder</font> 的计算过程。只要能完全理解这幅图片，什么 <font face="Times New Roman">Encoder</font> 架构，<font face="Times New Roman">Encoder-Decoder</font> 架构，什么输入层补零，逐层补零都不是问题，可以做到 “一图走天下”。
 
