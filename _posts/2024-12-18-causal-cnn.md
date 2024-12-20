@@ -38,6 +38,8 @@ categories: 神经网络
 ![图1](/assets/img/causal_cnn/图1.jpg "图1")
 <center>图 <font face="Times New Roman">1</font>. 一层卷积网络因果性示例</center>
 
+{% include figure.liquid path="/assets/img/causal_cnn/图1.jpg" class="img-fluid rounded" %}
+
 &emsp;&emsp;
 * 图<font face="Times New Roman">1(a)</font> 选取 <font face="Times New Roman">label</font> 信号中的最后 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是因果的。因为从图中可以看出当前时刻的输出帧只利用了当前时刻的输入帧以及历史的两帧信息；
 * 图<font face="Times New Roman">1(b)</font> 选取 <font face="Times New Roman">label</font> 信号中最中间的 <font face="Times New Roman">3</font> 帧，这种选取方式确定了该网络是非因果的。因为从图中可以看出当前时刻的输出帧除了利用当前时刻的输入帧以及历史的 <font face="Times New Roman">1</font> 帧信息外，还使用了未来的 <font face="Times New Roman">1</font> 帧信息；
