@@ -1,6 +1,6 @@
 ---
 layout: page
-title: My implementation of SN-Net
+title: SN-Net
 description: audio sample processed with SN-Net implemented by me
 img: assets/img/projects/snnet/1.png
 importance: 1
