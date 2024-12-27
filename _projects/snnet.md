@@ -35,10 +35,6 @@ Speech enhancement is challenging because of the diversity of background noise t
     </tr>
     <tr>
         <th rowspan="2">sample 1</th>
-        <td><img src="../assets/img/projects/snnet/samp1_noisy.jpeg" width="305" height="250" /></td>
-        <td><img src="../assets/img/projects/snnet/samp1_denoised.jpeg" width="305" height="250" /></td>
-    </tr>
-    <tr>
         <td>{% include audio.liquid path="assets/audio/projects/snnet/samp1_noisy.wav" controls=true %}</td>
         <td>{% include audio.liquid path="assets/audio/projects/snnet/samp1_denoised.wav" controls=true %}</td>
     </tr>
