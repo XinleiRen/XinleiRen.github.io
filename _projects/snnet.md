@@ -15,7 +15,7 @@ pretty_table: true
 ---
 
 ### Links
-The paper is available at both [English Version](https://arxiv.org/pdf/2012.09408) and [中文翻译版](https://blog.csdn.net/wjrenxinlei/article/details/122670688)。
+The paper is available in both [English](https://arxiv.org/pdf/2012.09408) and [Chinese](https://blog.csdn.net/wjrenxinlei/article/details/122670688) versions。
 
 ---
 
