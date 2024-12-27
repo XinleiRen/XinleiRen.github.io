@@ -22,7 +22,7 @@ Speech enhancement is challenging because of the diversity of background noise t
 
 ### System Architecture
 
-{% include figure.liquid loading="eager" path="assets/img/projects/1.png" title="SN-Net Architecture" class="img-fluid rounded z-depth-1" %}
+{% include figure.liquid loading="eager" path="assets/img/projects/snnet/1.png" title="SN-Net Architecture" class="img-fluid rounded z-depth-1" %}
 
 ---
 
@@ -30,17 +30,17 @@ Speech enhancement is challenging because of the diversity of background noise t
 
 <table>
     <tr>
-        <td> </td>
+        <th> </th>
         <th>noisy</th>
         <th>denoised</th>
     </tr>
     <tr>
-        <td rowspan="2">sample 1</td>
-        <td><img src="assets/img/projects/snnet/samp1_noisy.jpeg" width="305" height="250" /></td>
-        <td><img src="assets/img/projects/snnet/samp1_denoised.jpeg" width="305" height="250" /></td>
+        <th rowspan="2">sample 1</th>
+        <td><img src="../assets/img/projects/snnet/samp1_noisy.jpeg" width="305" height="250" /></td>
+        <td><img src="../assets/img/projects/snnet/samp1_denoised.jpeg" width="305" height="250" /></td>
     </tr>
     <tr>
-        <td><audio controls src="assets/audio/projects/snnet/samp1_noisy.wav"></audio></td>
-        <td><audio controls src="assets/audio/projects/snnet/samp1_denoised.wav"></audio></td>
+        <td><audio controls src="../assets/audio/projects/snnet/samp1_noisy.wav"></audio></td>
+        <td><audio controls src="../assets/audio/projects/snnet/samp1_denoised.wav"></audio></td>
     </tr>
 </table>
