@@ -8,12 +8,6 @@ category: work
 pretty_table: true
 ---
 
-## Interactive Speech and Noise Modeling for Speech Enhancement
-
-**Authors**: Chengyu Zheng, Xiulian Peng, Yuan Zhang, Sriram Srinivasan, Yan Lu
-
----
-
 ### Links
 The paper is available in both [English](https://arxiv.org/pdf/2012.09408) and [Chinese](https://blog.csdn.net/wjrenxinlei/article/details/122670688) versions。
 
