@@ -1,20 +1,20 @@
 ---
 layout: page
 title: SN-Net
-description: audio sample processed with SN-Net implemented by me
+description: audio samples processed with SN-Net
 img: assets/img/projects/snnet/1.png
 importance: 1
 category: work
 pretty_table: true
 ---
 
-### Links
+### Introduction
 The paper is available in both [English](https://arxiv.org/pdf/2012.09408) and [Chinese](https://blog.csdn.net/wjrenxinlei/article/details/122670688) versions.
 
 ---
 
 ### Demo
-I implemented SN-Net and processed several audio samples here.
+I implemented SN-Net and processed several audio samples.
 
 <table style="text-align: center;">
     <tr>
