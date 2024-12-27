@@ -10,8 +10,7 @@ pretty_table: true
 
 ## Interactive Speech and Noise Modeling for Speech Enhancement
 
-**Authors**: Chengyu Zheng^1^, Xiulian Peng^2^, Yuan Zhang^1^, Sriram Srinivasan^3^, Yan Lu^2^
-**Affiliation**: ^1^Communication University of China, ^2^Microsoft Research Asia, ^3^Microsoft Corporation
+**Authors**: Chengyu Zheng, Xiulian Peng, Yuan Zhang, Sriram Srinivasan, Yan Lu
 
 ---
 
@@ -40,7 +39,7 @@ Speech enhancement is challenging because of the diversity of background noise t
         <td><img src="../assets/img/projects/snnet/samp1_denoised.jpeg" width="305" height="250" /></td>
     </tr>
     <tr>
-        <td><audio controls src="../assets/audio/projects/snnet/samp1_noisy.wav"></audio></td>
-        <td><audio controls src="../assets/audio/projects/snnet/samp1_denoised.wav"></audio></td>
+        <td>{% include audio.liquid path="assets/audio/projects/snnet/samp1_noisy.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/snnet/samp1_denoised.wav" controls=true %}</td>
     </tr>
 </table>
