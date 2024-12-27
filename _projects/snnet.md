@@ -26,6 +26,7 @@ Speech enhancement is challenging because of the diversity of background noise t
 ---
 
 ### Demo
+I implemented SN-Net and processed several audio samples here.
 
 <table>
     <tr>
