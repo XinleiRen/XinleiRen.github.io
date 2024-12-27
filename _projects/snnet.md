@@ -15,7 +15,7 @@ pretty_table: true
 ---
 
 ### Links
-You can visit [https://arxiv.org/pdf/2012.09408](https://arxiv.org/pdf/2012.09408) or [https://blog.csdn.net/wjrenxinlei/article/details/122670688](https://blog.csdn.net/wjrenxinlei/article/details/122670688) to read the paper.
+The paper is available at both [English Version](https://arxiv.org/pdf/2012.09408) and [中文翻译版](https://blog.csdn.net/wjrenxinlei/article/details/122670688)。
 
 ---
 
