@@ -1,6 +1,6 @@
 ---
 layout: page
-title: A Causal U-Net Based Neural Beamforming Network for Real-Time Multi-Channel Speech Enhancement
+title: Multi-Channel Speech De-Noising
 description: audio samples of this work
 img: assets/img/projects/mmub/1.png
 importance: 3
@@ -9,12 +9,12 @@ pretty_table: true
 ---
 
 ### Introduction
-The paper is available at [https://www.isca-archive.org/interspeech_2021/ren21_interspeech.pdf](https://www.isca-archive.org/interspeech_2021/ren21_interspeech.pdf)
+The paper describing this work, titled "*A Causal U-Net Based Neural Beamforming Network for Real-Time Multi-Channel Speech Enhancement*", can be accessed at [https://www.isca-archive.org/interspeech_2021/ren21_interspeech.pdf](https://www.isca-archive.org/interspeech_2021/ren21_interspeech.pdf)
 
 ---
 
 ### Demo
-I implemented SN-Net and processed several audio samples.
+There are some audio samples of multi-channel speech de-noising.
 
 <table style="text-align: center;">
     <tr>
