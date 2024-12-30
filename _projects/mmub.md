@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Multi-Channel Speech De-Noising
+title: Multi-Channel Speech Denoising
 description: audio samples of this work
 img: assets/img/projects/mmub/1.png
 importance: 3
@@ -14,7 +14,7 @@ The paper describing this work, titled "*A Causal U-Net Based Neural Beamforming
 ---
 
 ### Demo
-There are some audio samples of multi-channel speech de-noising.
+There are some audio samples of multi-channel speech denoising.
 
 <table style="text-align: center;">
     <tr>
