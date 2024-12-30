@@ -1,6 +1,6 @@
 ---
 layout: page
-title: SN-Net
+title: SN-Net: Single-Channel Speech De-Noising
 description: audio samples processed with SN-Net
 img: assets/img/projects/snnet/1.png
 importance: 1
