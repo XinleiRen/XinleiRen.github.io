@@ -24,52 +24,52 @@ There are some audio samples of multi-channel speech denoising.
     </tr>
     <tr>
         <th>sample 1</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp1_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp1_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp1_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp1_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 2</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp2_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp2_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp2_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp2_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 3</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp3_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp3_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp3_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp3_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 4</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp4_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp4_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp4_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp4_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 5</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp5_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp5_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp5_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp5_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 6</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp6_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp6_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp6_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp6_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 7</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp7_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp7_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp7_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp7_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 8</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp8_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp8_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp8_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp8_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 9</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp9_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp9_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp9_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp9_denoised.mp3" controls=true %}</td>
     </tr>
     <tr>
         <th>sample 10</th>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp10_noisy.wav" controls=true %}</td>
-        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp10_denoised.wav" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp10_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mmub/samp10_denoised.mp3" controls=true %}</td>
     </tr>
 </table>
