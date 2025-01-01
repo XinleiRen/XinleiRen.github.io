@@ -30,7 +30,7 @@ I received my Bachelor's and Master's degrees from Northwestern Polytechnical Un
 
 My work and research interests cover meeting and entertainment scenarios, and mainly include: speech enhancement, audio effect, sound event detection, singing evaluation, speech quality assessment, speech synthesis, audio codec and so on.
 
-I am skilled at using techniques based on traditional signal processing and deep neural networks to address these audio problems. For more information about my work, please visit <a href="https://xinleiren.github.io/assets/pdf/cv.pdf"><i class="fab fa-file-pdf-o fa-2x"></i></a>
+I am skilled at using techniques based on traditional signal processing and deep neural networks to address these audio problems. For more information about my work, please visit <a href="https://xinleiren.github.io/assets/pdf/cv.pdf"><i class="fa-solid fa-file-pdf"></i></a>
 
 In my spare time, I enjoy traveling, drawing anime characters and going on hikes.
 
