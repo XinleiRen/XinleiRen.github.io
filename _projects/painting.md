@@ -21,4 +21,7 @@ images:
         <td><a href="/assets/img/projects/painting/6.jpeg" data-lightbox="roadtrip"><img src="/assets/img/projects/painting/6.jpeg" style="width: 300px; height: auto;" /></a></td>
         <td><a href="/assets/img/projects/painting/7.jpeg" data-lightbox="roadtrip"><img src="/assets/img/projects/painting/7.jpeg" style="width: 300px; height: auto;" /></a></td>
     </tr>
+    <tr>
+        <td><a href="/assets/img/projects/painting/8.jpeg" data-lightbox="roadtrip"><img src="/assets/img/projects/painting/8.jpeg" style="width: 300px; height: auto;" /></a></td>
+    </tr>
 </table>
