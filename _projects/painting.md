@@ -23,5 +23,6 @@ images:
     </tr>
     <tr>
         <td><a href="/assets/img/projects/painting/8.jpeg" data-lightbox="roadtrip"><img src="/assets/img/projects/painting/8.jpeg" style="width: 300px; height: auto;" /></a></td>
+        <td><a href="/assets/img/projects/painting/9.jpeg" data-lightbox="roadtrip"><img src="/assets/img/projects/painting/9.jpeg" style="width: 300px; height: auto;" /></a></td>
     </tr>
 </table>
