@@ -42,4 +42,9 @@ There are some audio samples of mic popping suppression.
         <td>{% include audio.liquid path="assets/audio/projects/mic_popping/samp4_noisy.mp3" controls=true %}</td>
         <td>{% include audio.liquid path="assets/audio/projects/mic_popping/samp4_denoised.mp3" controls=true %}</td>
     </tr>
+    <tr>
+        <th>sample 5</th>
+        <td>{% include audio.liquid path="assets/audio/projects/mic_popping/samp5_noisy.mp3" controls=true %}</td>
+        <td>{% include audio.liquid path="assets/audio/projects/mic_popping/samp5_denoised.mp3" controls=true %}</td>
+    </tr>
 </table>
